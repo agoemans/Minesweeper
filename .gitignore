@@ -1,8 +1,6 @@
 .idea
-
 *.map
-*.js
 vendor
 node_modules
-js
+
 _build
