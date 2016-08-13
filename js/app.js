@@ -25,13 +25,13 @@ function init(){
 	}
 
 	function drawField(){
-		var fieldIndexList = fieldCreation.mineLevelCreator();
+		var gameBoardGrid = fieldCreation.mineLevelCreator();
 
 		var x = 0, y = 0;
 
-		for (var i = 0; i < fieldIndexList.length; i++){
+		for (var i = 0; i < gameBoardGrid.length; i++){
 			y += 100;
-			for (var j = 0; j < fieldIndexList[i].length; j++){
+			for (var j = 0; j < gameBoardGrid[i].length; j++){
 
 				if ( j == 0 ) {
 					x = 100;
@@ -41,10 +41,10 @@ function init(){
 
 
 				var cell = new Cell();
-				cell.create(game, x, y, fieldIndexList[i][j]);
+				cell.create(game, x, y, gameBoardGrid[i][j]);
 
 				//console.log(i, j, x, y);
-				//console.log(fieldIndexList[i], fieldIndexList[i][j]);
+				//console.log(gameBoardGrid[i], gameBoardGrid[i][j]);
 			}
 
 		}

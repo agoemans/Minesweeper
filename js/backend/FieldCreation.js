@@ -18,6 +18,47 @@ var fieldCreation = (function() {
 		return mineMainList;
 	};
 
+	var getCell = function (matrix, row, col) {
+		var noValue = null;
+		var hasValue, value;
+		try {
+			hasValue = matrix[row][col] != undefined;
+			value = hasValue ? matrix[row][col] : noValue;
+			console.log(hasValue, 'hasValue', matrix[row][col])
+		} catch(e){
+			value = noValue;
+			//console.log(value, 'error', e)
+		}
+		return value;
+	};
+
+	var surroundings = function (matrix, row, col) {
+		return {
+			upRight: getCell(matrix, row - 1, col - 1),
+			up: getCell(matrix, row - 1, col),
+			upLeft: getCell(matrix, row - 1, col + 1),
+			right: getCell(matrix, row, col + 1),
+			left: getCell(matrix, row, col - 1),
+			downLeft: getCell(matrix, row + 1, col - 1),
+			down: getCell(matrix, row + 1, col),
+			downRight: getCell(matrix, row + 1, col + 1)
+
+		}
+	};
+
+	var calculateMineNumber = function (cellObject, board, row, column) {
+		for (var property in cellObject){
+			if(cellObject.hasOwnProperty(property)){
+				console.log(property, cellObject[property]);
+				if(cellObject[property] == 'x'){
+					console.log('it is x')
+					board[row][column]++;
+				}
+			}
+		}
+
+	}
+
 	return {
 		fullGrid: [],
 
@@ -27,6 +68,8 @@ var fieldCreation = (function() {
 
 		mineLevelCreator: function () {
 			this.basicMineBoard = createBasicMineBoard(Math.sqrt(16));
+
+			console.log(this.basicMineBoard);
 
 			var mines = 4;
 
@@ -38,35 +81,14 @@ var fieldCreation = (function() {
 				mines -= 1;
 			}
 
-			for (var i = 0; i < 4; i ++){
-				for(var j = 0; j < 4; j ++){
-					if (this.basicMineBoard[i][j] == 'x'){
-						if( i == 1 || i == 2){
-							this.placeMines(i + 1, j);
-							this.placeMines(i - 1, j);
-
-
-							if( j == 1 || j == 2){
-								this.placeMines(i, j + 1);
-								this.placeMines(i, j - 1);
-								this.placeMines(i + 1, j - 1);
-								this.placeMines(i + 1, j + 1);
-								this.placeMines(i - 1, j - 1);
-								this.placeMines(i - 1, j + 1);
-							}
-						}
-					}
+			for (var i = 0; i < 4; i ++) {
+				for (var j = 0; j < 4; j++) {
+					//console.log('adjacent to', i, j);
+					//console.log(surroundings(this.basicMineBoard, i,j));
+					calculateMineNumber(surroundings(this.basicMineBoard, i,j), this.basicMineBoard, i, j);
 				}
 			}
 			return this.basicMineBoard;
-		},
-
-		placeMines: function (rowNr, columnNr) {
-			if (this.basicMineBoard[rowNr][columnNr] != 'x') {
-				var tempValueStore = this.basicMineBoard[rowNr][columnNr];
-				tempValueStore += 1;
-				this.basicMineBoard[rowNr][columnNr] = tempValueStore;
-			}
 		}
 	}
 

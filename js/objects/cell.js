@@ -17,7 +17,7 @@ Cell.prototype.create = function (game, x, y, fieldValue) {
 
 	this.back = game.add.graphics(0, 0);
 	this.back.beginFill(0xFFAA3);
-	this.back.drawRect(x, y, 50, 50);
+	this.back.drawRect(x, y, 50, 80);
 	this.back.inputEnabled = true;
 	this.back.input.useHandCursor = true;
 
