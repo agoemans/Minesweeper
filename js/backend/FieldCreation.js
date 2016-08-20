@@ -5,6 +5,7 @@ var fieldCreation = (function() {
 
 	var createBasicMineBoard = function (number) {
 		var mineMainList = [];
+		console.log('mineMainList', mineMainList);
 
 		for (var i = 0; i < number; i++){
 			var rowList = [];
@@ -14,17 +15,16 @@ var fieldCreation = (function() {
 			}
 			mineMainList.push(rowList[i]);
 		}
-
 		return mineMainList;
 	};
 
-	var getCell = function (matrix, row, col) {
+	/*var getCell = function (matrix, row, col) {
 		var noValue = null;
 		var hasValue, value;
 		try {
-			hasValue = matrix[row][col] != undefined;
+			hasValue = matrix[row][col] != 'undefined';
 			value = hasValue ? matrix[row][col] : noValue;
-			console.log(hasValue, 'hasValue', matrix[row][col])
+			//console.log(hasValue, 'hasValue', matrix[row][col])
 		} catch(e){
 			value = noValue;
 			//console.log(value, 'error', e)
@@ -44,19 +44,18 @@ var fieldCreation = (function() {
 			downRight: getCell(matrix, row + 1, col + 1)
 
 		}
-	};
+	};*/
 
 	var calculateMineNumber = function (cellObject, board, row, column) {
 		for (var property in cellObject){
 			if(cellObject.hasOwnProperty(property)){
-				console.log(property, cellObject[property]);
-				if(cellObject[property] == 'x'){
-					console.log('it is x')
+				//console.log(property, cellObject[property]);
+				if(cellObject[property] == 'x' && board[row][column] != 'x'){
+					//console.log('it is x')
 					board[row][column]++;
 				}
 			}
 		}
-
 	}
 
 	return {
@@ -67,9 +66,8 @@ var fieldCreation = (function() {
 		rowList: [],
 
 		mineLevelCreator: function () {
+			this.basicMineBoard = [];
 			this.basicMineBoard = createBasicMineBoard(Math.sqrt(16));
-
-			console.log(this.basicMineBoard);
 
 			var mines = 4;
 
@@ -85,11 +83,14 @@ var fieldCreation = (function() {
 				for (var j = 0; j < 4; j++) {
 					//console.log('adjacent to', i, j);
 					//console.log(surroundings(this.basicMineBoard, i,j));
-					calculateMineNumber(surroundings(this.basicMineBoard, i,j), this.basicMineBoard, i, j);
+					//var cellSurroundings = new cellProcessor();
+					calculateMineNumber(cellProcessor.getSurroundings(this.basicMineBoard, i, j), this.basicMineBoard, i, j);
+					//calculateMineNumber(cellProcessor.getSurroundings(this.basicMineBoard, i,j), this.basicMineBoard, i, j);
 				}
 			}
 			return this.basicMineBoard;
 		}
+
 	}
 
 })();

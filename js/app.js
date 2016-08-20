@@ -14,7 +14,7 @@ function init(){
 		game.add.existing(bg);
 
 		fieldGroup = new Phaser.Group(game, null, "FieldHolder");
-		this.game.add.existing(fieldGroup);
+		game.add.existing(fieldGroup);
 
 		drawField();
 
@@ -40,8 +40,9 @@ function init(){
 				}
 
 
+				var adjacentCellCalc = cellProcessor.getSurroundings(gameBoardGrid, i, j);
 				var cell = new Cell();
-				cell.create(game, x, y, gameBoardGrid[i][j]);
+				cell.create(game, x, y, gameBoardGrid[i][j], adjacentCellCalc);
 
 				//console.log(i, j, x, y);
 				//console.log(gameBoardGrid[i], gameBoardGrid[i][j]);
