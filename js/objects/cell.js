@@ -7,12 +7,15 @@ function Cell() {
 	this.hasMine = false;
 	this.isBlockVisible = true;
 	this.adjacentCells = null;
+	this.mineSignal = null;
 
 }
 
-Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells) {
+Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells, mineSignal) {
 	this.x = x;
 	this.y = y;
+
+	this.mineSignal = mineSignal;
 
 	//console.log('adjacent cells', adjacentCells);
 	this.adjacentCells = adjacentCells;
@@ -28,8 +31,6 @@ Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells) {
 	this.back.input.useHandCursor = true;
 
 	this.back.events.onInputDown.add(this.onDown, this);
-	this.back.events.onInputUp.add(this.onUp, this);
-
 	game.add.existing(this.back);
 
 	var style =
@@ -45,16 +46,22 @@ Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells) {
 Cell.prototype.onDown = function () {
 	if(this.hasMine){
 		console.log(this.hasMine);
+		this.mineSignal.dispatch();
+	} else {
+		this.text.visible = true;
 	}
-	this.back.alpha = (this.isBlockVisible ? 0 : 1);
 
-	this.text.visible = true;
-
-	this.isBlockVisible = !this.isBlockVisible;
+	//this.back.alpha = (this.isBlockVisible ? 0 : 1);
+	//
+	//this.text.visible = true;
+	//
+	//this.isBlockVisible = !this.isBlockVisible;
 
 };
 
-Cell.prototype.onUp = function () {
+Cell.prototype.disableInput = function () {
+	this.back.inputEnabled = false;
+	this.back.input.useHandCursor = false;
 	//this.back.alpha = 1;
 };
 
@@ -67,4 +74,8 @@ Cell.prototype.checkForMines = function () {
 		};
 		this.text.setStyle(style, true);
 	}
+};
+
+Cell.prototype.showMine = function () {
+	this.text.visible = true;
 };
