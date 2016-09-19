@@ -1,28 +1,41 @@
 function Cell() {
 	this.back = null;
+	this.row = null;
+	this.col = null;
 	this.x = null;
 	this.y = null;
+
 	this.fieldValue = null;
 	this.text = null;
 	this.hasMine = false;
-	this.isBlockVisible = true;
-	this.adjacentCells = null;
-	this.mineSignal = null;
 
+	this.isBlockVisible = true;
+
+	this.mineSignal = null;
+	this.blankSignal = null;
+
+	this.hasZero = false;
 }
 
-Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells, mineSignal) {
+Cell.prototype.create = function (game, x, y, row, col, fieldValue, blankSignal, mineSignal) {
+	this.row = row;
+	this.col = col;
 	this.x = x;
 	this.y = y;
 
+	this.fieldValue = fieldValue;
 	this.mineSignal = mineSignal;
-
-	//console.log('adjacent cells', adjacentCells);
-	this.adjacentCells = adjacentCells;
+	this.blankSignal = blankSignal;
 
 	 if (fieldValue == 'x'){
 		 this.hasMine = true;
 	 }
+
+	console.log('fieldvalue', fieldValue);
+
+	if (fieldValue == 0){
+		this.hasZero = true;
+	}
 
 	this.back = game.add.graphics(0, 0);
 	this.back.beginFill(0xFFAA3);
@@ -41,6 +54,8 @@ Cell.prototype.create = function (game, x, y, fieldValue, adjacentCells, mineSig
 	this.text = game.add.text(x, y, fieldValue, style);
 	this.text.visible = false;
 
+	return this;
+
 };
 
 Cell.prototype.onDown = function () {
@@ -49,6 +64,11 @@ Cell.prototype.onDown = function () {
 		this.mineSignal.dispatch();
 	} else {
 		this.text.visible = true;
+	}
+
+	if(this.hasZero){
+		console.log('hasZero', this.hasZero);
+		this.blankSignal.dispatch(this.row, this.col);
 	}
 
 	//this.back.alpha = (this.isBlockVisible ? 0 : 1);
@@ -76,6 +96,6 @@ Cell.prototype.checkForMines = function () {
 	}
 };
 
-Cell.prototype.showMine = function () {
+Cell.prototype.showCell = function () {
 	this.text.visible = true;
 };
