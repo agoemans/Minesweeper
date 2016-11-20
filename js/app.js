@@ -1,5 +1,5 @@
 function init(){
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { init: init, create: create, update: update, shutdown: shutdown });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { init: init, preload: preload, create: create, update: update, shutdown: shutdown });
 
 	var fieldGroup = [];
 	var gameBoardGrid;
@@ -7,8 +7,19 @@ function init(){
 	var catchBlanks;
 	var restartText;
 
+	var score = 0;
+	var outlineGroup;
+	var scoreText;
+
 	function init() {
 		fieldGroup = [];
+
+	}
+
+	function preload() {
+		game.load.image('button', 'assets/images/button.png');
+		game.load.image('tube', 'assets/images/tube.png');
+
 	}
 
 	function create() {
@@ -29,9 +40,137 @@ function init(){
 		});
 		game.add.existing(restartText);
 
+		var popUp = new Phaser.Text (this.game, 500, 200, 'PopUP', style, null);
+		popUp.inputEnabled = true;
+		popUp.events.onInputDown.add(function (){
+			console.log('onInput up');
+			createLevelComplete();
+		}, this);
+
+		game.add.existing(popUp);
+
+		var killPopUp = new Phaser.Text (this.game, 500, 400, 'KillPopUp', style, null);
+		killPopUp.inputEnabled = true;
+		killPopUp.events.onInputDown.add(function (){
+			console.log('onInput up');
+			killLevelComplete()
+		});
+
+		game.add.existing(killPopUp);
+
 	}
 
+	function createLevelComplete(){
+
+		outlineGroup = new Phaser.Group(game, null, 'OutlineGroup');
+		game.add.existing(outlineGroup);
+		//outlineGroup.scale.set(0.1, 0.1);
+
+		var outline = new Phaser.Graphics(game, 0, 0);
+		outline.beginFill(0xffffff, 1)
+		.drawRoundedRect(0, 0, 500, 500, 50)
+		.endFill();
+
+		var outlineSprite = new Phaser.Sprite(game, 300, 300, outline.generateTexture());
+		outlineSprite.scale.set(0.1, 0.1);
+		outlineSprite.anchor.set(0.5, 0.5);
+		//game.add.existing(outlineSprite);
+		outlineGroup.add(outlineSprite);
+
+		//game.add.tween(outlineSprite.scale).to({y: 0.8, x: 0.8}, 750, Phaser.Easing.Bounce.Out, true, 0, 0, false);
+
+		var style = { font: '60px Arial', fill: '#ff0044', align: 'center' };
+		var levelComplete = new Phaser.Text (game, 200, -100, 'Complete', style, null);
+		//game.add.existing(levelComplete);
+		outlineGroup.add(levelComplete);
+
+		var style = { font: '60px Arial', fill: '#ff0044', align: 'center' };
+		scoreText = new Phaser.Text (game, 200, 200, 'score : ' + score.toString(), style, null);
+		scoreText.scale.set(0.0, 0.0);
+		scoreText.anchor.set(0.5, 0.5);
+		//game.add.existing(levelComplete);
+		outlineGroup.add(scoreText);
+
+		//levelComplete.angle = -10;
+
+		//game.add.tween(levelComplete).to({angle: 10}, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, 0, false);
+		//game.add.tween(levelComplete).to({y: 10}, 1000, Phaser.Easing.Elastic.Out, true, 300, 0, false);
+
+		var button = new Phaser.Sprite(game, 150, 500, 'button');
+		button.scale.set(0.0, 0.0);
+		button.anchor.set(0.5, 0.5);
+		//game.add.existing(button);
+		outlineGroup.add(button);
+
+		var button2 = new Phaser.Sprite(game, 450, 500, 'button');
+		button2.scale.set(0.0, 0.0);
+		button2.anchor.set(0.5, 0.5);
+		//game.add.existing(button);
+		outlineGroup.add(button2);
+
+
+		var tubeLiquidGr = new Phaser.Graphics(game, 0, 0);
+		tubeLiquidGr.beginFill(0xff334f, 1)
+				.drawRoundedRect(0, 0, 30, 150, 50)
+				.endFill();
+
+
+		var tubeLiquid = new Phaser.Sprite(game, 400, 200, tubeLiquidGr.generateTexture());
+		tubeLiquid.scale.set(0.0, 0.0);
+		tubeLiquid.anchor.set(0.5, 1);
+		//game.add.existing(outlineSprite);
+		outlineGroup.add(tubeLiquid);
+
+
+		var tube = new Phaser.Sprite(game, 400, 200, 'tube');
+		tube.scale.set(0.0, 0.0);
+		tube.anchor.set(0.5, 0.5);
+		//game.add.existing(button);
+		outlineGroup.add(tube);
+
+
+
+		var popTime = 500;
+		//all the tweens
+	//	game.add.tween(outlineGroup.scale).to({y: 0.8, x: 0.8}, 750, Phaser.Easing.Bounce.Out, true, 0, 0, false);
+		game.add.tween(outlineSprite.scale).to({y: 0.8, x: 0.8}, popTime, Phaser.Easing.Bounce.Out, true, 0, 0, false);
+		game.add.tween(levelComplete).to({y: 10}, 1500, Phaser.Easing.Elastic.Out, true, popTime, 0, false);
+		game.add.tween(scoreText.scale)
+				.to({y: 0.8, x: 0.8}, 500, Phaser.Easing.Quadratic.Out, true, popTime, 0, false)
+				.to({y: 1, x: 1}, 500, Phaser.Easing.Quadratic.Out, true, popTime, 0, false);
+
+		scoreText.score = 0;
+
+		game.add.tween(scoreText).to({score: 100}, 850, Phaser.Easing.Quadratic.Out, true, popTime+450, 0, false);
+
+		game.add.tween(button.scale).to({y: 0.3, x: 0.3}, 750, Phaser.Easing.Bounce.Out, true, popTime, 0, false);
+
+		game.add.tween(button2.scale).to({y: 0.3, x: 0.3}, 800, Phaser.Easing.Bounce.Out, true, popTime + 100, 0, false);
+
+		game.add.tween(tube.scale).to({y: 0.3, x: 0.3}, 750, Phaser.Easing.Quadratic.Out, true, popTime, 0, false);
+
+		game.add.tween(tubeLiquid.scale).to({y: 0.3, x: 0.3}, 850, Phaser.Easing.Quadratic.Out, true, popTime + 450, 0, false);
+
+		console.log(game);
+
+	}
+
+
 	function update() {
+		updateScore();
+	}
+
+	function updateScore() {
+		if(scoreText){
+			//score += 1;
+			scoreText.setText('Score: ' + Math.round(scoreText.score).toString());
+		}
+	}
+
+
+	function killLevelComplete(){
+		outlineGroup.destroy();
+		score  = 0;
 	}
 
 	function drawField(){

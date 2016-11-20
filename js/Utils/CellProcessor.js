@@ -62,7 +62,7 @@ var cellProcessor = (function () {
 			if (adjacentCell == true || adjacentCell == false) {
 				matrix[row][col].showCell();
 				if (adjacentCell == true) {
-					this.blankCellList.push([row, col]);
+					this.adjacentBlankCells.push([row, col]);
 				}
 			}
 		},
@@ -87,11 +87,11 @@ var cellProcessor = (function () {
 			//}
 			//this.blankCellList.pop();
 			//this.blankCellList.pop()
-			console.log('loop over immediate neighbor', this.blankCellList);
+			//console.log('loop over immediate neighbor', this.blankCellList);
 		},
 
 		loopOverAllNeighbors: function (matrix, row, col) {
-			console.log('what is coming through', matrix);
+			//console.log('what is coming through', matrix);
 			this.adjacentBlankCells = [];
 			this.blankCellList = [];
 			this.blankCellList.push([row, col]);
@@ -99,7 +99,7 @@ var cellProcessor = (function () {
 			this.loopOverImmediateNeighbors(matrix, row, col);
 
 			for (var i = 0; i < this.adjacentBlankCells.length; i++) {
-				this.loopOverAllNeighbors(matrix, this.adjacentBlankCells[0][0], this.adjacentBlankCells[0][1])
+				this.loopOverImmediateNeighbors(matrix, this.adjacentBlankCells[0][0], this.adjacentBlankCells[0][1])
 			}
 
 			/*while (this.blankCellList.length > 0) {
