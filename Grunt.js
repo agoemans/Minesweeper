@@ -73,6 +73,7 @@ module.exports = function(grunt) {
 		'clean',
 		'uglify',
 		'copy:dev',
+		'connect:server:keepalive',
 		'watch'
 	]);
 

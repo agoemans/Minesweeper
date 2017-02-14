@@ -7,6 +7,7 @@ function Cell() {
 
 	this.fieldValue = null;
 	this.text = null;
+	this.altText = null;
 	this.hasMine = false;
 
 	this.isBlockVisible = true;
@@ -15,9 +16,12 @@ function Cell() {
 	this.blankSignal = null;
 
 	this.hasZero = false;
+
+	this.game;
 }
 
 Cell.prototype.create = function (game, x, y, row, col, fieldValue, blankSignal, mineSignal) {
+	this.game = game;
 	this.row = row;
 	this.col = col;
 	this.x = x;
@@ -44,22 +48,31 @@ Cell.prototype.create = function (game, x, y, row, col, fieldValue, blankSignal,
 	this.back.input.useHandCursor = true;
 
 	this.back.events.onInputDown.add(this.onDown, this);
-	game.add.existing(this.back);
+	this.game.add.existing(this.back);
 
 	var style =
 	{
 		font: "105px Arial", fill: "#ff0044", align: "center"
 	};
 
-	this.text = game.add.text(x, y, fieldValue, style);
+	this.text = this.game.add.text(x, y, fieldValue, style);
 	this.text.visible = false;
+
+	var altStyle =
+	{
+		font: "105px Arial", fill: "#ff0044", align: "center"
+	};
+
+	this.altText = this.game.add.text(x, y, '?', style);
+	this.altText.visible = false;
+
 
 	return this;
 
 };
 
-Cell.prototype.onDown = function () {
-	if(this.hasMine){
+Cell.prototype.onDown = function (pointer) {
+	/*if(this.hasMine){
 		console.log(this.hasMine);
 		this.mineSignal.dispatch();
 	} else {
@@ -69,6 +82,28 @@ Cell.prototype.onDown = function () {
 	if(this.hasZero){
 		console.log('hasZero', this.hasZero);
 		this.blankSignal.dispatch(this.row, this.col);
+	}*/
+
+	console.log('pointer', this.game.input.activePointer);
+
+	if(this.game.input.activePointer.rightButton.isDown){
+		if(this.altText.visible){
+			this.altText.setText('@');
+		} else {
+			this.altText.visible = !this.altText.visible;
+		}
+	} else {
+		if(this.hasMine){
+			console.log(this.hasMine);
+			this.mineSignal.dispatch();
+		} else {
+			this.text.visible = true;
+		}
+
+		if(this.hasZero){
+			console.log('hasZero', this.hasZero);
+			this.blankSignal.dispatch(this.row, this.col);
+		}
 	}
 
 	//this.back.alpha = (this.isBlockVisible ? 0 : 1);

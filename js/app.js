@@ -58,6 +58,8 @@ function init(){
 
 		game.add.existing(killPopUp);
 
+		this.game.input.mouse.capture = true;
+
 	}
 
 	function createLevelComplete(){
