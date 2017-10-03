@@ -1,5 +1,5 @@
 function init(){
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { init: init, create: create, update: update, shutdown: shutdown });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { init: init, create: create, shutdown: shutdown });
 
 	var fieldGroup = [];
 	var gameBoardGrid;
