@@ -23,8 +23,8 @@ module.exports = function(grunt) {
 				files: {
 					'_build/dev/js/Minesweeper.js': [
 						//'node_modules/phaser/build/phaser.min.js',
-						'js/Utils/CellProcessor.js',
-						'js/backend/FieldCreation.js',
+						'js/utils/cellProcessor.js',
+						'js/backend/fieldCreation.js',
 						'js/objects/cell.js',
 						'js/app.js'
 					]
